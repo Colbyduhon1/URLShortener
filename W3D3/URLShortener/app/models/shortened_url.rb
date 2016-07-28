@@ -9,6 +9,13 @@ class Shortened_URL < ActiveRecord::Base
     class_name: "User"
   )
 
+  has_many(
+    :visits,
+    primary_key: :id,
+    foreign_key: :short_url_id,
+    class_name: "Visit"
+  )
+
   def self.random_code
     short_url = SecureRandom.urlsafe_base64
     if Shortened_URL.exists?(short_url)
@@ -23,6 +30,15 @@ class Shortened_URL < ActiveRecord::Base
     Shortened_URL.create!({:user_id => user.id, :long_url => long_url, :short_url => short_url })
   end
 
+  def num_clicks
+    num_clicks = Visit.select(:user_id).count
+  end
 
+  def num_uniques
+    num_clicks = Visit.select(:user_id).distinct.count
+  end
 
+  def num_recent_uniques
+    num_clicks = Visit.select(:user_id).where("created_at > ?", 10.minutes.ago).distinct.count
+  end
 end

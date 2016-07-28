@@ -8,7 +8,12 @@ has_many(
   class_name: "Shortened_URL"
 )
 
-
+has_many(
+  :visits,
+  primary_key: :id,
+  foreign_key: :user_id,
+  class_name: "Visit"
+)
 
 
 
