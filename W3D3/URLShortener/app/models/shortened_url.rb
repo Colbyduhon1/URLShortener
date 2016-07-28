@@ -11,9 +11,14 @@ class Shortened_URL < ActiveRecord::Base
 
   has_many(
     :visits,
-    primary_key: :id,
-    foreign_key: :short_url_id,
-    class_name: "Visit"
+    through: :user,
+    source: "User"
+  )
+
+  has_many(
+    :visitors,
+    through: :visits,
+    source: "Visit"
   )
 
   def self.random_code
